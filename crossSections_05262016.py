@@ -1,3 +1,4 @@
+#test a new added line
 ##------------------------------------------------------------------------------------------------------------------
 ##  Script Name: Stream Cross-Sections [CrossSections.py]
 ##
@@ -53,7 +54,7 @@ def splitline (inFC,FCName,alongDist):
     OutDir = arcpy.env.workspace
     outFCName = FCName
     outFC = OutDir+"/"+outFCName
-    
+
     def distPoint(p1, p2):
         calc1 = p1.X - p2.X
         calc2 = p1.Y - p2.Y
@@ -124,7 +125,7 @@ def splitline (inFC,FCName,alongDist):
                         lineArray.add(pnt)
                         totalDist = 0
 
-                    prevpoint = pnt                
+                    prevpoint = pnt
                     pntcount += 1
 
                     pnt = part.next()
@@ -155,7 +156,7 @@ def splitline (inFC,FCName,alongDist):
     #revDesc.ShapeFieldName
 
     deleterows = arcpy.UpdateCursor(outFC)
-    for iDRow in deleterows:       
+    for iDRow in deleterows:
          deleterows.deleteRow(iDRow)
 
     try:
@@ -179,7 +180,7 @@ def splitline (inFC,FCName,alongDist):
     for iInRow in inputRows:
         inGeom = iInRow.shape
         iCounter+=1
-        iCounter2+=1    
+        iCounter2+=1
         if (iCounter2 > (OnePercentThreshold+0)):
               #printit("Processing Record "+str(iCounter) + " of "+ str(numRecords))
               iCounter2=0
@@ -271,7 +272,7 @@ def Azline2(azimuth):
 
 #Set user-defined inputs
 wrkSpace = arcpy.GetParameterAsText(0) #Set working directory (folder) #r"D:\Users\miharris\Desktop\NemadjiTest\ScriptTestFolder"
-strmCenterline = arcpy.GetParameterAsText(1) #Input streamline (that has route features already) #r"D:\Users\miharris\Desktop\NemadjiTest\ScriptTestFolder\testStream_meters.shp" 
+strmCenterline = arcpy.GetParameterAsText(1) #Input streamline (that has route features already) #r"D:\Users\miharris\Desktop\NemadjiTest\ScriptTestFolder\testStream_meters.shp"
 reachField = arcpy.GetParameterAsText(2) #Select the field that defines the route feature #"Route"
 DistanceSplit = float(arcpy.GetParameterAsText(3)) #How often along the streamline you want transects (units are FEET) #100
 ratio = arcpy.GetParameterAsText(4).lower() #Regional curve equation for bankfull width #"2.9761*pow(x, 0.9233)"
@@ -329,7 +330,7 @@ try:
     General_GDB = WorkFolder + "\General.gdb"
     arcpy.CreateFileGDB_management(WorkFolder, "General", "CURRENT")
     arcpy.env.workspace = General_GDB
-    
+
    #Checkout Spatial Analyst extension
     arcpy.AddMessage("Checking license... ")
     if arcpy.CheckExtension("Spatial") == "Available":
@@ -346,7 +347,7 @@ try:
     #Add field to name and reference cross-section features
     arcpy.AddField_management(strmCenterline, "strm_ID", "LONG")
     objID = arcpy.Describe(strmCenterline).OIDFieldName
-    
+
     #This updateCursor loop is different than the others in this script because it turns out that having the objID
     #var results in an error 'object does not support indexing' the objID var is there to make sure I can obtain
     #either the OID or FID if the streamline is either a shapefile or feature class in a geodatabase
@@ -360,22 +361,22 @@ try:
         arcpy.SetProgressorPosition()
     del updateSort
     del row
-    
+
     #Add fields for calculation
     arcpy.env.outputMFlag = "Disabled"
     arcpy.env.outputZFlag = "Disabled"
     arcpy.AddMessage("Obtaining maximum drainage area for stream ID... ")
     #Calculate maximum flowAcc value for which each strm_ID passes over
     zonalStats = arcpy.sa.ZonalStatisticsAsTable(strmCenterline, "strm_ID", inFlowAcc, "zonalStatsAsTable", "DATA", "MAXIMUM")
-    
+
     #Join based on attributes
     arcpy.JoinField_management(strmCenterline, "strm_ID", zonalStats, "strm_ID", "MAX")
-    
+
     #Add fields for calculation
     FieldsNames=["DA_sqmi", "W_RegCrve", "Width_125"]
     for fn in FieldsNames:
         arcpy.AddField_management (strmCenterline, fn, "DOUBLE")
-    
+
     #Calculate drainage area, bankfull width, and 25% >BKFw fields
     arcpy.AddMessage("Calculating drainage area and bankfull width... ")
     updateRows = arcpy.da.UpdateCursor(strmCenterline, ["DA_sqmi", "W_RegCrve", "Width_125", "MAX"])
@@ -391,25 +392,25 @@ try:
         updateRows.updateRow(row)
     del updateRows
     del row
-    
+
     ##------------------------------------------------------------------------------------------------------------------
     ##------------------------------------------------------------------------------------------------------------------
     #Transect Tool
-    
+
     #Unsplit Line
     arcpy.AddMessage("Creating transects across stream channel... ")
     LineDissolve="LineDissolve"
     arcpy.Dissolve_management (strmCenterline, LineDissolve, "Width_125", "", "SINGLE_PART") #Harris added "Width_125 instead of hard-coded number
-    LineSplit="LineSplit" 
-    
+    LineSplit="LineSplit"
+
     #Run SplitLine function
     splitline(LineDissolve, LineSplit, DistanceSplitFT)
-    
+
     #Add fields to LineSplit
     FieldsNames=["LineID", "Direction", "Azimuth", "X_mid", "Y_mid", "AziLine_1", "AziLine_2", "Distance"]
     for fn in FieldsNames:
         arcpy.AddField_management (LineSplit, fn, "DOUBLE")
-    
+
     #Create progressor for script completion percentage labels in ArcMap [Record Count for LineSplit]
     recordCount1 = int(arcpy.GetCount_management(LineSplit).getOutput(0))
 
@@ -435,29 +436,29 @@ try:
         updateRows.updateRow(row)
     del updateRows
     del row
-    
+
     #Generate Azline1 and Azline2
     Azline1="Azline1"
     Azline2="Azline2"
     #Hard-coded as FEET below, I don't think I need to change that.
     arcpy.BearingDistanceToLine_management (LineSplit, Azline1, "X_mid", "Y_mid", "Distance", "FEET", "AziLine_1", "DEGREES", "GEODESIC", "LineID", spatial_reference)
     arcpy.BearingDistanceToLine_management (LineSplit, Azline2, "X_mid", "Y_mid", "Distance", "FEET", "AziLine_2", "DEGREES", "GEODESIC", "LineID", spatial_reference)
-    
+
     #Create Azline and append Azline1 and Azline2
     Azline="Azline"
     arcpy.CreateFeatureclass_management(General_GDB, "Azline", "POLYLINE", "", "", "", spatial_reference)
     arcpy.AddField_management (Azline, "LineID", "DOUBLE")
     arcpy.Append_management ([Azline1, Azline2], Azline, "NO_TEST")
-    
+
     #Dissolve Azline
     Azline_Dissolve="Azline_Dissolve"
     arcpy.Dissolve_management (Azline, Azline_Dissolve,"LineID", "", "SINGLE_PART")
-    
+
     #Add Fields to Azline_Dissolve
     FieldsNames2=["x_start", "y_start", "x_end", "y_end"]
     for fn2 in FieldsNames2:
         arcpy.AddField_management (Azline_Dissolve, fn2, "DOUBLE")
-    
+
     #Calculate Azline_Dissolve fields
     updateRows = arcpy.da.UpdateCursor(Azline_Dissolve, ["SHAPE@", "x_start", "y_start", "x_end", "y_end"])
     iter3 = 1
@@ -472,17 +473,17 @@ try:
         updateRows.updateRow(row)
     del updateRows
     del row
-    
+
     #Generate output file
     OutputTransect = arcpy.XYToLine_management (Azline_Dissolve, "OutputTransect", "x_start", "y_start", "x_end", "y_end", "", "", spatial_reference)
     arcpy.AddMessage("Done creating transects across stream channel... ")
-    
+
     ##------------------------------------------------------------------------------------------------------------------
     ##------------------------------------------------------------------------------------------------------------------
-    
+
     #Copy OutputTransect so it doesn't have 'linesegment' field (used for joining later)
     OutputTransectNoLineSeg = arcpy.CopyFeatures_management(OutputTransect, "OutputTransectNoLineSeg")
-    
+
     #Create progressor for script completion percentage labels in ArcMap [Record Count for OutputTransect]
     recordCount2 = int(arcpy.GetCount_management(OutputTransect).getOutput(0))
 
@@ -499,15 +500,15 @@ try:
         updateRows.updateRow(row)
     del updateRows
     del row
-    
+
     #Polyline EndPoints to Points
     arcpy.FeatureVerticesToPoints_management(OutputTransect, endPoints, "BOTH_ENDS")
-    
+
     #Add XY Coordinates to the endPoints
     fldNmes = ["X_UTM", "Y_UTM"]
     for fl in fldNmes:
         arcpy.AddField_management(endPoints, fl, "DOUBLE")
-    
+
     #Create progressor for script completion percentage labels in ArcMap [Record Count for endPoints]
     recordCount3 = int(arcpy.GetCount_management(endPoints).getOutput(0))
 
@@ -524,10 +525,10 @@ try:
         #del row
     del updateRows
     del row
-    
+
     #Use spatial join on target(endPoints) and join(OutputTransect)
     arcpy.SpatialJoin_analysis(endPoints, OutputTransect, endptTransctJoin)
-    
+
     #Locate endpoint features along streamline route
     #Correct left/right orientation depends on direction that the streamlines were produced;
     #either from Mark's tools, or from digitizing direction
@@ -537,39 +538,39 @@ try:
     distnce = str(DistanceSplit) + locateFeatUnit
     #Save the table as "locate_points" back into the wrkSpace user-inputted save location
     arcpy.LocateFeaturesAlongRoutes_lr(endptTransctJoin, strmCenterline, "Route", distnce, "locate_points", props, "FIRST", "DISTANCE", "NO_ZERO", "FIELDS", "NO_M_DIRECTION")
-    
+
     #Create XY event layer from linear referencing table
     arcpy.MakeXYEventLayer_management("locate_points", "X_UTM", "Y_UTM", tableLayer, spatial_reference)
-    
+
     #Find endpoints that are either on the left/right side of the streamline route
     arcpy.AddMessage("Finding endpoints that are river left vs. river right... ")
     rivLeftExpr = '"DISTANCE" <= 0'
     rivRightExpr = '"DISTANCE" >= 0'
     ptRiverLeft = arcpy.FeatureClassToFeatureClass_conversion(tableLayer, General_GDB, "ptRiverLeft", rivLeftExpr)
-    ptRiverRight = arcpy.FeatureClassToFeatureClass_conversion(tableLayer, General_GDB, "ptRiverRight", rivRightExpr) 
+    ptRiverRight = arcpy.FeatureClassToFeatureClass_conversion(tableLayer, General_GDB, "ptRiverRight", rivRightExpr)
 
     #tableLayer was causing lock when trying to delete General_GDB (Arcgis error 000603)
     arcpy.Delete_management(tableLayer)
-    
+
     #Smooth the valley walls
-    arcpy.SmoothLine_cartography(valleyLeft, smthValleyLeft, "BEZIER_INTERPOLATION") 
+    arcpy.SmoothLine_cartography(valleyLeft, smthValleyLeft, "BEZIER_INTERPOLATION")
     arcpy.SmoothLine_cartography(valleyRight, smthValleyRight, "BEZIER_INTERPOLATION")
-    
+
     #Find the nearest valley wall from the transect endpoints
     arcpy.Near_analysis(ptRiverLeft, smthValleyLeft, "", "LOCATION", "NO_ANGLE")
     arcpy.Near_analysis(ptRiverRight, smthValleyRight, "", "LOCATION", "NO_ANGLE")
-    
+
     #Create lines from endpoints to valley wall
     arcpy.AddMessage("Creating lines from endpoints to valley wall... ")
     arcpy.XYToLine_management(ptRiverLeft, lineRiverLeft, "X_UTM", "Y_UTM", "NEAR_X", "NEAR_Y", "GEODESIC", "", spatial_reference)
     arcpy.XYToLine_management(ptRiverRight, lineRiverRight, "NEAR_X", "NEAR_Y", "X_UTM", "Y_UTM", "GEODESIC", "", spatial_reference)
-    
+
     #Merge valley lines into one feature class
     arcpy.Merge_management([lineRiverRight, lineRiverLeft, OutputTransectNoLineSeg], valleyLineMerge)
-    
+
     #Join valley lines to stream transect lines
     arcpy.SpatialJoin_analysis(valleyLineMerge, endptTransctJoin, valleyTransectJoin)
-    
+
     #Dissolve by Line_Seg to create completed cross-sections
     arcpy.Dissolve_management(valleyTransectJoin, CrossSections, "Line_Seg")
     xsCount = int(arcpy.GetCount_management(CrossSections).getOutput(0))
