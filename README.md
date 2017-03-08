@@ -19,7 +19,7 @@ Previously, these cross-sections had to be manually digitized by the user in GIS
 
 ## Installation
 
-Download the [ArcToolbox and script (.zip file)] (http://python.mikeharris.co/CrossSections.zip) to try in ArcGIS. (Note: this script was developed and tested with ArcGIS 10.2)
+Download the [ArcToolbox and script (.zip file)] (http://python.mikeharris.co/CrossSections.zip) to try in ArcGIS.
 
 ## Tests
 
