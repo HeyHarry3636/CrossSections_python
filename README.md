@@ -3,6 +3,10 @@
 
 This [script] (crossSections_05262016.py) was developed to automate the process of drawing cross-sections through stream centerline using ArcGIS.  The cross-sections are perpendicular to the streamline while within the channels banks, then become perpendicular to the valley walls once out of the banks.
 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=qSQw5f6VlWg
+" target="_blank"><img src="http://img.youtube.com/vi/qSQw5f6VlWg/0.jpg" 
+alt="CrossSections_python" width="240" height="180" border="10" /></a>
+
 ## Script Inputs
 
 *For the ArcGIS script execution, the following inputs are needed:*
