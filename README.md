@@ -46,3 +46,6 @@ Some code snippets and ideas were obtained from Mark Ellefson 'Classify Stream T
 This code is available under the [MIT License.] (LICENSE.txt)
 
 <img src="XSinputs.png" width="240" height="180" border="10" />
+<img src="XSoutput.png" width="240" height="180" border="10" />
+<img src="XSwatershed.png" width="240" height="180" border="10" />
+
