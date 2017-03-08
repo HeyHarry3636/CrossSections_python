@@ -1,7 +1,7 @@
 # Cross-Sections (crossSections_05262016.py)
 ## Synopsis
 
-This script was developed to automate the process of drawing cross-sections through stream centerline using ArcGIS.  The cross-sections are perpendicular to the streamline while within the channels banks, then become perpendicular to the valley walls once out of the banks.
+This [script] (crossSections_05262016.py) was developed to automate the process of drawing cross-sections through stream centerline using ArcGIS.  The cross-sections are perpendicular to the streamline while within the channels banks, then become perpendicular to the valley walls once out of the banks.
 
 ## Script Inputs
 
@@ -39,4 +39,4 @@ Some code snippets and ideas were obtained from Mark Ellefson 'Classify Stream T
 
 ## License
 
-This code is available under the MIT License.
+This code is available under the [MIT License.] (LICENSE.txt)
