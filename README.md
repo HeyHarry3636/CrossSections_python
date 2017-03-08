@@ -15,7 +15,7 @@ alt="CrossSections_python" width="240" height="180" border="10" /></a>
 + Digitized valley walls (left/right)
 + Flow accumulation layer (derived in previous hydrologic processing of the DEM)
 
-This [cross-sections presentation] (http://python.mikeharris.co/CrossSectionsScript.pdf) is an overview of the script parameters and execution.
+This [cross-sections presentation] (CrossSectionsScript.pdf) is an overview of the script parameters and execution.
 
 ## Motivation
 
@@ -23,7 +23,7 @@ Previously, these cross-sections had to be manually digitized by the user in GIS
 
 ## Installation
 
-Download the [ArcToolbox and script (.zip file)] (http://python.mikeharris.co/CrossSections.zip) to try in ArcGIS.
+Download the [ArcToolbox and script (.zip file)] (CrossSections.zip) to try in ArcGIS.
 
 ## Tests
 
@@ -44,3 +44,5 @@ Some code snippets and ideas were obtained from Mark Ellefson 'Classify Stream T
 ## License
 
 This code is available under the [MIT License.] (LICENSE.txt)
+
+<img src="XSinputs.png" width="240" height="180" border="10" />
