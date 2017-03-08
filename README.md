@@ -29,6 +29,8 @@ Download the [ArcToolbox and script (.zip file)] (CrossSections.zip) to try in A
 
 This script was developed and tested with ArcGIS 10.2, Python 2.7
 
+Python modules needed: *acrpy, math, sys, traceback*
+
 ## Contributors
 
 Michael Harris is the author of this script.
