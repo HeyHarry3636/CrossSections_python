@@ -1,4 +1,3 @@
-#test a new added line
 ##------------------------------------------------------------------------------------------------------------------
 ##  Script Name: Stream Cross-Sections [CrossSections.py]
 ##
@@ -606,5 +605,3 @@ arcpy.Delete_management("in_memory\\lineRiverLeft")
 arcpy.Delete_management("in_memory\\lineRiverRight")
 arcpy.Delete_management("in_memory\\valleyLineMerge")
 arcpy.Delete_management("in_memory\\valleyTransectJoin")
-
-print "Done"
